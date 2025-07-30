@@ -11,6 +11,8 @@ export type CardSection = {
   index: number;
   title?: string;
   cards: CardProps[];
+  tilesToShow?: number;
+  showTitle?: boolean;
 };
 
 interface ShelfForHomeProps {
@@ -21,39 +23,16 @@ export default function ShelfForHome({ sections }: ShelfForHomeProps) {
   return (
     <Box sx={{ minHeight: "100vh", pb: 4 }}>
       {sections?.map((section) => (
-        <Box key={`${section.presetName}-${section.index}`} mx={2} mb={4}>
+        <Box key={`${section.presetName}-${section.index}`} mb={4}>
           {section.presetName === "FeaturedHomeRail" ? (
-            <HeroSlider
-              aspectRatio="16:6"
-              autoPlay
-              interval={5000}
-              imageKeySelect="imgFeaturedCarousel16x6"
-              entry={section.cards.map((card) => card.entry)}
-              styles={{
-                titleColor: "#fff",
-              }}
-            />
+            <HeroSlider entry={section.cards.map((card) => card.entry)} />
           ) : (
             <HorizontalSlider
               items={section.cards}
               renderItem={(item, index) => <Card key={index} {...item} />}
-              visibleSlides={5}
-              spacing={16}
-              slideBy={5}
-              title={section.title}
-              styles={{
-                scrollContainerStyle: {
-                  paddingX: 0,
-                  scrollbarHidden: true,
-                },
-                titleStyle: {
-                  color: "#fff",
-                },
-                containerStyle: {
-                  backgroundColor: "transparent",
-                },
-              }}
-              hideArrowsBreakpoint={{ xs: true }}
+              visibleSlides={section.tilesToShow}
+              slideBy={section.tilesToShow}
+              title={section.showTitle !== false ? section.title : undefined}
               presetName={section.presetName}
             />
           )}

@@ -18,6 +18,7 @@ import {
   DEFAULT_SLIDE_BY_BREAKPOINT,
   DEFAULT_SHADOW_WIDTH_BREAKPOINT,
   DEFAULT_PEEK_BREAKPOINT,
+  DEFAULT_TITLE_MARGIN_LEFT_BREAKPOINT,
 } from "./constants";
 
 function HorizontalSlider<T>({
@@ -119,36 +120,67 @@ function HorizontalSlider<T>({
     return false;
   }, [mounted, hideArrowsBreakpoint, isXs, isSm, isMd, isLg, isXl, presetName]);
 
-  const adjustedVisibleSlidesBreakpoints = useMemo(() => {
-    if (presetName === "16x9TopTen") {
-      return {
-        xs: (visibleSlidesBreakpoints.xs ?? DEFAULT_VISIBLE_SLIDES) - 1,
-        sm: (visibleSlidesBreakpoints.sm ?? DEFAULT_VISIBLE_SLIDES) - 1,
-        md: (visibleSlidesBreakpoints.md ?? DEFAULT_VISIBLE_SLIDES) - 1,
-        lg: (visibleSlidesBreakpoints.lg ?? DEFAULT_VISIBLE_SLIDES) - 1,
-        xl: (visibleSlidesBreakpoints.xl ?? DEFAULT_VISIBLE_SLIDES) - 1,
-      };
-    }
-    return visibleSlidesBreakpoints;
-  }, [presetName, visibleSlidesBreakpoints]);
-
   const effectiveVisibleSlides = useMemo(() => {
-    if (!mounted || !adjustedVisibleSlidesBreakpoints) return visibleSlides;
-    if (isXs) return adjustedVisibleSlidesBreakpoints.xs ?? visibleSlides;
-    if (isSm) return adjustedVisibleSlidesBreakpoints.sm ?? visibleSlides;
-    if (isMd) return adjustedVisibleSlidesBreakpoints.md ?? visibleSlides;
-    if (isLg) return adjustedVisibleSlidesBreakpoints.lg ?? visibleSlides;
-    if (isXl) return adjustedVisibleSlidesBreakpoints.xl ?? visibleSlides;
+    if (!mounted) return visibleSlides;
+
+    const getValue = (val?: number, key?: string) => {
+      if (presetName === "16x9TopTen" && key !== "xs") {
+        return (val ?? DEFAULT_VISIBLE_SLIDES) - 1;
+      }
+      return val ?? visibleSlides;
+    };
+
+    if (isXs) return getValue(visibleSlidesBreakpoints.xs, "xs");
+    if (isSm) return getValue(visibleSlidesBreakpoints.sm, "sm");
+    if (isMd) return getValue(visibleSlidesBreakpoints.md, "md");
+    if (isLg) return getValue(visibleSlidesBreakpoints.lg, "lg");
+    if (isXl) return getValue(visibleSlidesBreakpoints.xl, "xl");
+
     return visibleSlides;
   }, [
     mounted,
-    adjustedVisibleSlidesBreakpoints,
+    presetName,
+    visibleSlidesBreakpoints,
     isXs,
     isSm,
     isMd,
     isLg,
     isXl,
     visibleSlides,
+  ]);
+
+  const effectiveSlideBy = useMemo(() => {
+    if (!mounted) return slideBy;
+
+    const getValue = (val?: number, key?: string) => {
+      if (presetName === "16x9TopTen" && key !== "xs") {
+        return (
+          (val ??
+            DEFAULT_SLIDE_BY_BREAKPOINT[
+              key as keyof typeof DEFAULT_SLIDE_BY_BREAKPOINT
+            ]) - 1
+        );
+      }
+      return val ?? slideBy;
+    };
+
+    if (isXs) return getValue(slideByBreakpoint?.xs, "xs");
+    if (isSm) return getValue(slideByBreakpoint?.sm, "sm");
+    if (isMd) return getValue(slideByBreakpoint?.md, "md");
+    if (isLg) return getValue(slideByBreakpoint?.lg, "lg");
+    if (isXl) return getValue(slideByBreakpoint?.xl, "xl");
+
+    return slideBy;
+  }, [
+    mounted,
+    presetName,
+    slideByBreakpoint,
+    isXs,
+    isSm,
+    isMd,
+    isLg,
+    isXl,
+    slideBy,
   ]);
 
   // Responsive spacing
@@ -163,15 +195,6 @@ function HorizontalSlider<T>({
   }, [mounted, spacingBreakpoint, isXs, isSm, isMd, isLg, isXl, spacing]);
 
   // Responsive slideBy
-  const effectiveSlideBy = useMemo(() => {
-    if (!mounted || !slideByBreakpoint) return slideBy;
-    if (isXs) return slideByBreakpoint?.xs ?? slideBy;
-    if (isSm) return slideByBreakpoint?.sm ?? slideBy;
-    if (isMd) return slideByBreakpoint?.md ?? slideBy;
-    if (isLg) return slideByBreakpoint?.lg ?? slideBy;
-    if (isXl) return slideByBreakpoint?.xl ?? slideBy;
-    return slideBy;
-  }, [mounted, slideByBreakpoint, isXs, isSm, isMd, isLg, isXl, slideBy]);
 
   // scroll function
   const scroll = (direction: "left" | "right") => {
@@ -274,7 +297,17 @@ function HorizontalSlider<T>({
     fontWeight: titleStyle.fontWeight || DEFAULT_TITLE_STYLE.fontWeight,
     color: titleStyle.color || DEFAULT_TITLE_STYLE.color,
     marginBottom: titleStyle.marginBottom || DEFAULT_TITLE_STYLE.marginBottom,
-    marginLeft: titleStyle.marginLeft || DEFAULT_TITLE_STYLE.marginLeft,
+    marginLeft: (() => {
+      const defaultMargin =
+        titleStyle.marginLeft ?? DEFAULT_TITLE_STYLE.marginLeft;
+      if (!mounted) return defaultMargin;
+      if (isXs) return DEFAULT_TITLE_MARGIN_LEFT_BREAKPOINT.xs ?? defaultMargin;
+      if (isSm) return DEFAULT_TITLE_MARGIN_LEFT_BREAKPOINT.sm ?? defaultMargin;
+      if (isMd) return DEFAULT_TITLE_MARGIN_LEFT_BREAKPOINT.md ?? defaultMargin;
+      if (isLg) return DEFAULT_TITLE_MARGIN_LEFT_BREAKPOINT.lg ?? defaultMargin;
+      if (isXl) return DEFAULT_TITLE_MARGIN_LEFT_BREAKPOINT.xl ?? defaultMargin;
+      return defaultMargin;
+    })(),
   };
 
   const extractedContainerStyle = {
@@ -309,8 +342,19 @@ function HorizontalSlider<T>({
   };
 
   const extractedScrollContainerStyle = {
-    paddingX:
-      scrollContainerStyle.paddingX || DEFAULT_SCROLL_CONTAINER_STYLE.paddingX,
+    paddingX: (() => {
+      const px =
+        scrollContainerStyle.paddingX ||
+        DEFAULT_SCROLL_CONTAINER_STYLE.paddingX;
+      if (!mounted || typeof px !== "object") return px;
+
+      if (isXs) return px.xs ?? 0;
+      if (isSm) return px.sm ?? 0;
+      if (isMd) return px.md ?? 0;
+      if (isLg) return px.lg ?? 0;
+      if (isXl) return px.xl ?? 0;
+      return 0;
+    })(),
     backgroundColor:
       scrollContainerStyle.backgroundColor ||
       DEFAULT_SCROLL_CONTAINER_STYLE.backgroundColor,
@@ -396,7 +440,15 @@ function HorizontalSlider<T>({
         />
       )}
 
-      <Box position="relative">
+      <Box
+        position="relative"
+        sx={{
+          "&:hover .slider-arrow": {
+            opacity: 1,
+            pointerEvents: "auto",
+          },
+        }}
+      >
         {extractedShadowOverlay.show && (
           <>
             <Box
@@ -430,6 +482,7 @@ function HorizontalSlider<T>({
 
         {!hideArrows && (
           <IconButton
+            className="slider-arrow"
             onClick={() => scroll("left")}
             sx={{
               position: "absolute",
@@ -441,6 +494,9 @@ function HorizontalSlider<T>({
               backgroundColor: extractedButtonStyle.backgroundColor,
               borderRadius: extractedButtonStyle.borderRadius,
               padding: extractedButtonStyle.padding,
+              opacity: 0,
+              pointerEvents: "none",
+              transition: "opacity 0.3s ease",
               "&:hover": {
                 color:
                   extractedButtonStyle.hoverColor || extractedButtonStyle.color,
@@ -518,6 +574,7 @@ function HorizontalSlider<T>({
         </Box>
         {!hideArrows && (
           <IconButton
+            className="slider-arrow"
             onClick={() => scroll("right")}
             sx={{
               position: "absolute",
@@ -529,6 +586,9 @@ function HorizontalSlider<T>({
               backgroundColor: extractedButtonStyle.backgroundColor,
               borderRadius: extractedButtonStyle.borderRadius,
               padding: extractedButtonStyle.padding,
+              opacity: 0,
+              pointerEvents: "none",
+              transition: "opacity 0.3s ease",
               "&:hover": {
                 color:
                   extractedButtonStyle.hoverColor || extractedButtonStyle.color,

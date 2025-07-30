@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import CacheProvider from "./CacheProvider";
-import Header from "@/components/HeaderWrapper/HeaderWrapper";
+import Header from "@/components/Header/Header";
 import { getHeaderData } from "@/lib/services/api.service";
 
 export const metadata: Metadata = {

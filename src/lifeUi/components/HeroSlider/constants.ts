@@ -2,16 +2,62 @@
 export const HERO_SLIDER_DEFAULTS = {
   autoPlay: true,
   interval: 5000,
+  maxWidth: "60%",
   styles: {
     // NEW: CTA Button Padding Defaults
-    ctaButtonPadding: "8px 16px", // Default padding
-    ctaButtonPaddingX: 16, // Horizontal padding
-    ctaButtonPaddingY: 8, // Vertical padding
+
+    titleFontSize: {
+      xs: "0.8rem",
+      sm: "1.5rem",
+      md: "2rem",
+      lg: "2.5rem",
+      xl: "4rem",
+    },
+    titleColor: "#FFFFFF",
+    titleFontFamily: "sans-serif",
+    titleFontWeight: "700",
+    titleMarginBottom: { xs: 2, sm: 6, md: 8, lg: 10, xl: 12 },
+    titleMarginLeft: 0,
+    descriptionFontSize: {
+      xs: "0.4rem",
+      sm: "0.6rem",
+      md: "0.8rem",
+      lg: "1rem",
+      xl: "1.6rem",
+    },
+    descriptionColor: "#FFFFFF",
+    descriptionFontFamily: "sans-serif",
+    descriptionFontWeight: "400",
+    descriptionMarginBottom: { xs: 2, sm: 6, md: 8, lg: 10, xl: 12 },
+    descriptionMarginLeft: 0,
+    ctaButtonColor: "#000",
+    ctaButtonBg: "#FFD700",
+    ctaButtonHoverBg: "#FFFFFF",
+    ctaButtonFontSize: {
+      xs: "0.2rem",
+      sm: "0.4rem",
+      md: "0.6rem",
+      lg: "1rem",
+      xl: "1.4rem",
+    },
+    ctaButtonFontWeight: "700",
+    ctaButtonBorderRadius: "4px",
+
+    // NEW: CTA Button Padding defaults
+    ctaButtonPadding: "8px 16px",
+    ctaButtonPaddingX: 0,
+    ctaButtonPaddingY: 0,
+
+    overlayBackground:
+      "linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0.8), rgba(0,0,0,0.1))",
+    paddingLeft: 0,
+    spacingBetweenText: 4,
+    responsivePaddingLeft: { xs: 6, sm: 8, md: 10, lg: 12, xl: 16 },
   },
   imageKeySelect: "imgFeaturedCarousel16x6",
   imageKeyText: "",
   imageKeySrc: "",
-  aspectRatio: "16:9" as const,
+  aspectRatio: "16:6" as const,
   secondaryImage: {
     show: false,
     keySelect: "",
@@ -26,18 +72,18 @@ export const HERO_SLIDER_DEFAULTS = {
   arrowStyle: {
     leftArrowIcon: "",
     rightArrowIcon: "",
-    backgroundColor: "rgba(255,255,255,0.8)",
-    hoverBackgroundColor: "rgba(255,255,255,1)",
-    color: "rgba(0,0,0,0.87)",
-    hoverColor: "rgba(0,0,0,0.87)",
-    size: "small",
+    backgroundColor: "transparent",
+    hoverBackgroundColor: "transparent",
+    color: "#ffffff",
+    hoverColor: "#ffffff",
+    size: "30px",
     borderRadius: "50%",
     padding: 1,
     leftOffsetX: 16,
     leftOffsetY: 0,
     rightOffsetX: 16,
     rightOffsetY: 0,
-    hoverScale: 1.1,
+    hoverScale: 1.2,
   },
   // NEW: Pagination Style Defaults
   paginationStyle: {

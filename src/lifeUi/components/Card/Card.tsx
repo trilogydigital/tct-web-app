@@ -235,9 +235,7 @@ export default function Card({
               left: 0,
               right: 0,
               bottom: 0,
-              border: `${hoverBorder.width || 2}px ${
-                hoverBorder.style || "solid"
-              } ${hoverBorder.color || "#1976d2"}`,
+              border: `${hoverBorder.width}px ${hoverBorder.style} ${hoverBorder.color}`,
               borderRadius: getBorderRadius(hoverBorder.radius),
               pointerEvents: "none",
               zIndex: 1,
