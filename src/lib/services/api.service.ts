@@ -5,7 +5,7 @@ import type {
 } from "@/lifeUi/components/Card/Card.types";
 import type { CardSection } from "@/pages/ShelfForHome";
 
-// Define types for preset and hpcEntry based on usage and API structure
+// ListSetting type which contains layout + styling
 export interface Preset {
   presetName: string;
   isEnhanced?: boolean;
@@ -20,6 +20,14 @@ export interface Preset {
   styles?: CardProps["styles"];
 }
 
+export interface ListSetting {
+  label: string;
+  titleKey?: string;
+  tilesToShow?: number;
+  showTitle?: boolean;
+  cardStyle: Preset;
+}
+
 export interface HPCEntry {
   preset_name: string;
   feed_url: string;
@@ -29,7 +37,7 @@ export interface HPCEntry {
 
 async function fetchHPCFeedURL(): Promise<string> {
   const res = await fetch("https://strapi-dev.trilogyapps.com/api/home-page", {
-    next: { revalidate: 60 }, // ISR: revalidate every 60s
+    next: { revalidate: 60 },
   });
   if (!res.ok) throw new Error("Failed to fetch HPC feed URL");
   const json = await res.json();
@@ -40,19 +48,20 @@ export async function fetchHPC(feedUrl: string) {
   const res = await fetch(feedUrl, {
     next: { revalidate: 60 },
   });
-  if (!res.ok) throw new Error("Failed to fetch hpc data");
+  if (!res.ok) throw new Error("Failed to fetch HPC data");
   return res.json();
 }
 
-export async function fetchPresetData() {
+export async function fetchListSettings(): Promise<ListSetting[]> {
   const res = await fetch(
-    "https://strapi-dev.trilogyapps.com/api/card-settings?populate=all",
+    "https://strapi-dev.trilogyapps.com/api/list-settings?populate=all",
     {
       next: { revalidate: 60 },
     }
   );
-  if (!res.ok) throw new Error("Failed to fetch preset data");
-  return res.json();
+  if (!res.ok) throw new Error("Failed to fetch list settings");
+  const json = await res.json();
+  return json.data;
 }
 
 async function fetchFeedEntries(
@@ -66,7 +75,7 @@ async function fetchFeedEntries(
     if (!res.ok) throw new Error(`Status: ${res.status}`);
     const data = await res.json();
     return {
-      title: data.title ?? "", // get feed title
+      title: data.title ?? "",
       entries: data.entry ?? [],
     };
   } catch (err) {
@@ -85,37 +94,36 @@ export async function getHeaderData() {
       next: { revalidate: 60 },
     }
   );
-
   if (!res.ok) throw new Error("Failed to fetch header data");
   return res.json();
 }
 
 function mapFeedEntryToCardProps(entry: CardEntry, preset: Preset): CardProps {
-  const attributes = preset ?? {};
-
   const secondaryImage: SecondaryImage | undefined =
-    attributes.useSecondaryAsBackground ? attributes.secondaryImage : undefined;
+    preset.useSecondaryAsBackground ? preset.secondaryImage : undefined;
 
   return {
     entry,
-    isEnhanced: attributes.isEnhanced ?? false,
-    isEpisode: attributes.isEpisode ?? false,
-    showTitle: attributes.showTitle ?? false,
-    ImageKey: attributes.imageKey ?? undefined,
-    useSecondaryAsBackground: attributes.useSecondaryAsBackground ?? false,
-    tags: attributes.badges ?? [],
+    isEnhanced: preset.isEnhanced ?? false,
+    isEpisode: preset.isEpisode ?? false,
+    showTitle: preset.showTitle ?? false,
+    ImageKey: preset.imageKey ?? undefined,
+    useSecondaryAsBackground: preset.useSecondaryAsBackground ?? false,
+    tags: preset.badges ?? [],
     secondaryImage,
-    aspectRatio: attributes.aspectRatio ?? "16:9",
-    positionOffsets: attributes.positionOffsets ?? undefined,
+    aspectRatio: preset.aspectRatio ?? "16:9",
+    positionOffsets: preset.positionOffsets ?? undefined,
     styles: {
-      hoverScale: attributes.styles?.hoverScale ?? undefined,
+      hoverScale: preset.styles?.hoverScale ?? undefined,
+      border: preset.styles?.border,
+      hoverBorder: preset.styles?.hoverBorder,
     },
   };
 }
 
 export async function getCardProps(): Promise<CardSection[]> {
-  const [presetData, hpcFeedUrl] = await Promise.all([
-    fetchPresetData(),
+  const [listSettings, hpcFeedUrl] = await Promise.all([
+    fetchListSettings(),
     fetchHPCFeedURL(),
   ]);
 
@@ -126,13 +134,15 @@ export async function getCardProps(): Promise<CardSection[]> {
   const hpc = await fetchHPC(hpcFeedUrl);
 
   const cardSections = await Promise.all(
-    hpc.entry.map(async (hpcEntry: HPCEntry) => {
-      const matchingPreset = presetData.data.find(
-        (preset: Preset) => preset.presetName === hpcEntry.preset_name
+    (hpc?.entry ?? []).map(async (hpcEntry: HPCEntry) => {
+      const matchedSetting = listSettings.find(
+        (setting: ListSetting) =>
+          setting.label === hpcEntry.preset_name ||
+          setting.cardStyle?.presetName === hpcEntry.preset_name
       );
 
-      if (!matchingPreset) {
-        console.warn("No matching preset for:", hpcEntry.preset_name);
+      if (!matchedSetting?.cardStyle) {
+        console.warn("No matching setting for:", hpcEntry.preset_name);
         return null;
       }
 
@@ -141,14 +151,17 @@ export async function getCardProps(): Promise<CardSection[]> {
         hpcEntry.preset_name
       );
 
-      const cards = feedEntries.map((entry: CardEntry) =>
-        mapFeedEntryToCardProps(entry, matchingPreset)
+      const cards = (feedEntries ?? []).map((entry: CardEntry) =>
+        mapFeedEntryToCardProps(entry, matchedSetting.cardStyle)
       );
+
       return {
         presetName: hpcEntry.preset_name,
-        title: feedTitle || hpcEntry.title || hpcEntry.preset_name,
-        index: hpcEntry.index,
+        title: feedTitle,
+        index: hpcEntry.index ?? 0,
         cards,
+        tilesToShow: matchedSetting.tilesToShow,
+        showTitle: matchedSetting.showTitle,
       };
     })
   );

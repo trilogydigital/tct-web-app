@@ -194,7 +194,16 @@ export default function HeroSlider(props: HeroSliderProps) {
   );
 
   return (
-    <Box sx={{ position: "relative", overflow: "hidden" }}>
+    <Box
+      sx={{
+        position: "relative",
+        overflow: "hidden",
+        "&:hover .hero-slider-arrow": {
+          visibility: "visible",
+          opacity: 1,
+        },
+      }}
+    >
       {/* Pagination Styles */}
       {showPagination && (
         <style>
@@ -245,7 +254,6 @@ export default function HeroSlider(props: HeroSliderProps) {
           enabled: showPagination,
           el: ".hero-slider-pagination",
         }}
-        navigation // enable navigation module
         loop
         onSwiper={(swiper) => setSwiperInstance(swiper)}
         style={{ width: "100%", height: "100%" }}
@@ -271,8 +279,8 @@ export default function HeroSlider(props: HeroSliderProps) {
             >
               <Box
                 sx={{
-                  maxWidth: "60%",
-                  color: styles.titleColor || "#fff",
+                  maxWidth: HERO_SLIDER_DEFAULTS.maxWidth,
+                  color: styles.titleColor,
                   zIndex: 1,
                   ml: styles.responsivePaddingLeft || { xs: 6, sm: 8, md: 10 },
                   pl: styles.paddingLeft,
@@ -281,7 +289,7 @@ export default function HeroSlider(props: HeroSliderProps) {
                 {styles.showTitle !== false && (
                   <Typography
                     variant="h5"
-                    fontWeight={styles.titleFontWeight || "bold"}
+                    fontWeight={styles.titleFontWeight}
                     gutterBottom
                     sx={{
                       fontSize: styles.titleFontSize,
@@ -385,6 +393,7 @@ export default function HeroSlider(props: HeroSliderProps) {
       {/* Prev Arrow */}
       <IconButton
         ref={prevRef}
+        className="hero-slider-arrow"
         sx={{
           position: "absolute",
           top: "50%",
@@ -400,13 +409,19 @@ export default function HeroSlider(props: HeroSliderProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          visibility: mounted ? "visible" : "hidden",
+          opacity: 0,
+          visibility: "hidden",
+          transition: "opacity 0.3s ease, visibility 0.3s ease",
           "&:hover": {
             backgroundColor: hoverBackgroundColor,
             color: hoverColor,
           },
           "&:hover .MuiSvgIcon-root, &:hover img": {
             transform: `scale(${hoverScale})`,
+          },
+          ".hero-slider-wrapper:hover &": {
+            opacity: 1,
+            visibility: "visible",
           },
         }}
       >
@@ -416,6 +431,7 @@ export default function HeroSlider(props: HeroSliderProps) {
       {/* Next Arrow */}
       <IconButton
         ref={nextRef}
+        className="hero-slider-arrow"
         sx={{
           position: "absolute",
           top: "50%",
@@ -431,13 +447,19 @@ export default function HeroSlider(props: HeroSliderProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          visibility: mounted ? "visible" : "hidden",
+          opacity: 0,
+          visibility: "hidden",
+          transition: "opacity 0.3s ease, visibility 0.3s ease",
           "&:hover": {
             backgroundColor: hoverBackgroundColor,
             color: hoverColor,
           },
           "&:hover .MuiSvgIcon-root, &:hover img": {
             transform: `scale(${hoverScale})`,
+          },
+          ".hero-slider-wrapper:hover &": {
+            opacity: 1,
+            visibility: "visible",
           },
         }}
       >
