@@ -254,7 +254,6 @@ export default function HeroSlider(props: HeroSliderProps) {
           enabled: showPagination,
           el: ".hero-slider-pagination",
         }}
-        navigation // enable navigation module
         loop
         onSwiper={(swiper) => setSwiperInstance(swiper)}
         style={{ width: "100%", height: "100%" }}
