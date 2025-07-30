@@ -134,7 +134,7 @@ export async function getCardProps(): Promise<CardSection[]> {
   const hpc = await fetchHPC(hpcFeedUrl);
 
   const cardSections = await Promise.all(
-    hpc?.entry?.map(async (hpcEntry: HPCEntry) => {
+    (hpc?.entry ?? []).map(async (hpcEntry: HPCEntry) => {
       const matchedSetting = listSettings.find(
         (setting: ListSetting) =>
           setting.label === hpcEntry.preset_name ||
@@ -151,7 +151,7 @@ export async function getCardProps(): Promise<CardSection[]> {
         hpcEntry.preset_name
       );
 
-      const cards = feedEntries?.map((entry: CardEntry) =>
+      const cards = (feedEntries ?? []).map((entry: CardEntry) =>
         mapFeedEntryToCardProps(entry, matchedSetting.cardStyle)
       );
 
