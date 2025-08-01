@@ -328,7 +328,8 @@ export default function Header({ data }: Props) {
         <Toolbar
           sx={{
             justifyContent: "space-between",
-            backgroundColor: "#000",
+            background:
+              "linear-gradient(to bottom, #010a18 0%, #071020 50%, rgba(16, 26, 40, 0.4) 70%)",
             color: "#fff",
             minHeight: "64px !important",
             height: 64,

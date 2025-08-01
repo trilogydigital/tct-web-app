@@ -35,6 +35,29 @@ export interface HPCEntry {
   index?: number;
 }
 
+function mapFeedEntryToCardProps(entry: CardEntry, preset: Preset): CardProps {
+  const secondaryImage: SecondaryImage | undefined =
+    preset.useSecondaryAsBackground ? preset.secondaryImage : undefined;
+
+  return {
+    entry,
+    isEnhanced: preset.isEnhanced ?? false,
+    isEpisode: preset.isEpisode ?? false,
+    showTitle: preset.showTitle ?? false,
+    ImageKey: preset.imageKey ?? undefined,
+    useSecondaryAsBackground: preset.useSecondaryAsBackground ?? false,
+    tags: preset.badges ?? [],
+    secondaryImage,
+    aspectRatio: preset.aspectRatio ?? "16:9",
+    positionOffsets: preset.positionOffsets ?? undefined,
+    styles: {
+      hoverScale: preset.styles?.hoverScale ?? undefined,
+      border: preset.styles?.border,
+      hoverBorder: preset.styles?.hoverBorder,
+    },
+  };
+}
+
 async function fetchHPCFeedURL(): Promise<string> {
   const res = await fetch("https://strapi-dev.trilogyapps.com/api/home-page", {
     next: { revalidate: 60 },
@@ -87,40 +110,6 @@ async function fetchFeedEntries(
   }
 }
 
-export async function getHeaderData() {
-  const res = await fetch(
-    "https://strapi-dev.trilogyapps.com/api/header?populate=all",
-    {
-      next: { revalidate: 60 },
-    }
-  );
-  if (!res.ok) throw new Error("Failed to fetch header data");
-  return res.json();
-}
-
-function mapFeedEntryToCardProps(entry: CardEntry, preset: Preset): CardProps {
-  const secondaryImage: SecondaryImage | undefined =
-    preset.useSecondaryAsBackground ? preset.secondaryImage : undefined;
-
-  return {
-    entry,
-    isEnhanced: preset.isEnhanced ?? false,
-    isEpisode: preset.isEpisode ?? false,
-    showTitle: preset.showTitle ?? false,
-    ImageKey: preset.imageKey ?? undefined,
-    useSecondaryAsBackground: preset.useSecondaryAsBackground ?? false,
-    tags: preset.badges ?? [],
-    secondaryImage,
-    aspectRatio: preset.aspectRatio ?? "16:9",
-    positionOffsets: preset.positionOffsets ?? undefined,
-    styles: {
-      hoverScale: preset.styles?.hoverScale ?? undefined,
-      border: preset.styles?.border,
-      hoverBorder: preset.styles?.hoverBorder,
-    },
-  };
-}
-
 export async function getCardProps(): Promise<CardSection[]> {
   const [listSettings, hpcFeedUrl] = await Promise.all([
     fetchListSettings(),
@@ -167,4 +156,26 @@ export async function getCardProps(): Promise<CardSection[]> {
   );
 
   return cardSections.filter(Boolean);
+}
+
+export async function getHeaderData() {
+  const res = await fetch(
+    "https://strapi-dev.trilogyapps.com/api/header?populate=all",
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch header data");
+  return res.json();
+}
+
+export async function getWatchData() {
+  const res = await fetch(
+    "https://tbn-dsp-curation-api-prod.tbncloud.com/web/virtual_feed?page_limit=100&page_offset=1&virtualfeed=true&playlistid=b2c2050e&okta_id=00upfqp1oz8uwnrqx697&network=TBN&app_name=TBN",
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch watch data");
+  return res.json();
 }

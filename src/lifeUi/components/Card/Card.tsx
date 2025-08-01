@@ -533,16 +533,45 @@ export default function Card({
   // Episode layout - show title and description beside card
   if (isEpisode) {
     return (
-      <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: {
+            xs: "column",
+            sm: "row",
+          },
+          gap: 2,
+          alignItems: {
+            xs: "stretch",
+            sm: "flex-start",
+          },
+        }}
+      >
         {cardContent}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            maxWidth: {
+              xs: 320,
+              sm: "none",
+            },
+          }}
+        >
           <Typography
             variant="h6"
             component="div"
             sx={{
+              fontSize: {
+                xs: CARD_DEFAULTS.episodeTitle.fontSize,
+                xl: `calc(${CARD_DEFAULTS.episodeTitle.fontSize} * 1.4)`,
+              },
               fontWeight: CARD_DEFAULTS.episodeTitle.fontWeight,
               mt: CARD_DEFAULTS.episodeTitle.mt,
-              mb: CARD_DEFAULTS.episodeTitle.mb,
+              mb: {
+                xs: 1,
+                sm: CARD_DEFAULTS.episodeTitle.mb,
+              },
               color: CARD_DEFAULTS.episodeTitle.color,
             }}
           >
@@ -552,8 +581,17 @@ export default function Card({
             <Typography
               variant="body2"
               sx={{
+                fontSize: {
+                  xs: CARD_DEFAULTS.episodeSummary.fontSize,
+                  xl: `calc(${CARD_DEFAULTS.episodeSummary.fontSize} * 1.2)`,
+                },
+                fontWeight: CARD_DEFAULTS.episodeSummary.fontWeight,
                 color: CARD_DEFAULTS.episodeSummary.color,
                 lineHeight: CARD_DEFAULTS.episodeSummary.lineHeight,
+                display: "-webkit-box",
+                WebkitLineClamp: 6,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
               }}
             >
               {displaySummary}
