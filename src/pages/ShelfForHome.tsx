@@ -29,6 +29,7 @@ export default function ShelfForHome({ sections }: ShelfForHomeProps) {
           ) : (
             <HorizontalSlider
               items={section.cards}
+              getItemKey={(item, index) => item.entry.id ?? index}
               renderItem={(item, index) => <Card key={index} {...item} />}
               visibleSlides={section.tilesToShow}
               slideBy={section.tilesToShow}

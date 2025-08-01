@@ -1,5 +1,3 @@
-"use client";
-
 import Card from "@/lifeUi/components/Card/Card";
 import { CardEntry } from "@/lifeUi/components/Card/Card.types";
 import Grid from "@/lifeUi/components/Grid/Grid";
@@ -20,8 +18,8 @@ export default function ShelfForWatch({ items = [] }: ShelfForWatchProps) {
       <div style={{ marginBottom: "80px" }}>
         <h1 style={{ color: "#fff" }}>Featured Grid</h1>
         <Grid container>
-          {items?.map((item, index) => (
-            <Grid key={index} item>
+          {items?.map((item) => (
+            <Grid key={item.id} item>
               <Card entry={item} ImageKey="720" />
             </Grid>
           ))}
@@ -31,9 +29,10 @@ export default function ShelfForWatch({ items = [] }: ShelfForWatchProps) {
       <div>
         <VerticalList
           items={items}
-          renderItem={(item, index) => (
+          getKey={(item, index) => item.id ?? index}
+          renderItem={(item) => (
             <Card
-              key={index}
+              key={item.id}
               isEnhanced={false}
               isEpisode
               ImageKey="720"

@@ -17,5 +17,4 @@ export interface GridProps extends HTMLAttributes<HTMLDivElement> {
   xl?: GridSize;
   style?: CSSProperties;
   className?: string;
-  breakpoints?: Partial<Record<Breakpoint, number>>;
 }

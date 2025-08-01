@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import type { GridProps, Breakpoint, GridSize } from "./Grid.types";
 import { SPACING_UNIT, DEFAULT_COLUMNS } from "./Grid.constants";
-import { useGridCSS } from "../../hooks/useGridCSS";
+import "./grid.css";
 
 function Grid({
   container,
@@ -18,11 +18,8 @@ function Grid({
   xl = DEFAULT_COLUMNS.xl,
   style,
   className,
-  breakpoints,
   ...rest
 }: GridProps) {
-  useGridCSS(breakpoints);
-
   const actualRowSpacing = rowSpacing !== undefined ? rowSpacing : spacing;
   const actualColumnSpacing =
     columnSpacing !== undefined ? columnSpacing : spacing;

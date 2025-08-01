@@ -1,0 +1,71 @@
+/* Grid Container Styles */
+.custom-grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Grid Item Base Styles */
+.custom-grid-item {
+  box-sizing: border-box;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Responsive Breakpoints */
+
+/* xs: 0px and up */
+@media (min-width: 0px) {
+  .custom-grid-item-xs {
+    flex-basis: var(--grid-xs, auto) !important;
+    max-width: var(--grid-xs, auto) !important;
+  }
+}
+
+/* sm: 600px and up */
+@media (min-width: 600px) {
+  .custom-grid-item-sm {
+    flex-basis: var(--grid-sm, var(--grid-xs, auto)) !important;
+    max-width: var(--grid-sm, var(--grid-xs, auto)) !important;
+  }
+}
+
+/* md: 900px and up */
+@media (min-width: 900px) {
+  .custom-grid-item-md {
+    flex-basis: var(--grid-md, var(--grid-sm, var(--grid-xs, auto))) !important;
+    max-width: var(--grid-md, var(--grid-sm, var(--grid-xs, auto))) !important;
+  }
+}
+
+/* lg: 1200px and up */
+@media (min-width: 1200px) {
+  .custom-grid-item-lg {
+    flex-basis: var(
+      --grid-lg,
+      var(--grid-md, var(--grid-sm, var(--grid-xs, auto)))
+    ) !important;
+    max-width: var(
+      --grid-lg,
+      var(--grid-md, var(--grid-sm, var(--grid-xs, auto)))
+    ) !important;
+  }
+}
+
+/* xl: 1536px and up */
+@media (min-width: 1536px) {
+  .custom-grid-item-xl {
+    flex-basis: var(
+      --grid-xl,
+      var(--grid-lg, var(--grid-md, var(--grid-sm, var(--grid-xs, auto))))
+    ) !important;
+    max-width: var(
+      --grid-xl,
+      var(--grid-lg, var(--grid-md, var(--grid-sm, var(--grid-xs, auto))))
+    ) !important;
+  }
+}

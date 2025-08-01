@@ -108,6 +108,7 @@ export interface HorizontalSliderStyles {
 
 export interface HorizontalSliderProps<T = unknown> {
   items: T[];
+  getItemKey?: (item: T, index: number) => React.Key;
   renderItem: (item: T, index: number) => ReactNode;
   visibleSlides?: number;
   spacing?: number;
