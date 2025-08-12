@@ -2,6 +2,9 @@ import type {
   CardProps,
   SecondaryImage,
   CardEntry,
+  CardAspectRatio,
+  CardTag,
+  PositionOffsets,
 } from "@/lifeUi/components/Card/Card.types";
 import type { CardSection } from "@/pages/ShelfForHome";
 
@@ -13,10 +16,10 @@ export interface Preset {
   showTitle?: boolean;
   imageKey?: string;
   useSecondaryAsBackground?: boolean;
-  badges?: CardProps["tags"];
+  badges?: CardTag[];
   secondaryImage?: SecondaryImage;
-  aspectRatio?: CardProps["aspectRatio"];
-  positionOffsets?: CardProps["positionOffsets"];
+  aspectRatio?: CardAspectRatio;
+  positionOffsets?: PositionOffsets;
   styles?: CardProps["styles"];
 }
 
@@ -171,11 +174,39 @@ export async function getHeaderData() {
 
 export async function getWatchData() {
   const res = await fetch(
-    "https://tbn-dsp-curation-api-prod.tbncloud.com/web/virtual_feed?page_limit=100&page_offset=1&virtualfeed=true&playlistid=b2c2050e&okta_id=00upfqp1oz8uwnrqx697&network=TBN&app_name=TBN",
+    "https://strapi-dev.trilogyapps.com/api/shows-page?populate=all",
     {
       next: { revalidate: 60 },
     }
   );
   if (!res.ok) throw new Error("Failed to fetch watch data");
   return res.json();
+}
+
+export async function getWatchFilterData(feedId: string) {
+  const res = await fetch(
+    `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok)
+    throw new Error(`Failed to fetch filter data for feedId: ${feedId}`);
+  return res.json();
+}
+
+// Client-side function for dynamic filter calls
+export async function fetchFilteredEntries(feedId: string) {
+  try {
+    const res = await fetch(
+      `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`
+    );
+    if (!res.ok)
+      throw new Error(`Failed to fetch entries for feedId: ${feedId}`);
+    const data = await res.json();
+    return data.entry || [];
+  } catch (error) {
+    console.error("Error fetching filtered entries:", error);
+    return [];
+  }
 }

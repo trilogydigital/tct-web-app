@@ -215,4 +215,6 @@ export interface HeroSliderProps {
 
   // NEW: Pagination Style Controls
   paginationStyle?: PaginationStyleProps;
+  // Callback for slide click
+  onSlideClick?: (slideIndex: number) => void;
 }
