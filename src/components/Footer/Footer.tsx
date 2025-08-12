@@ -55,8 +55,9 @@ export default function Footer() {
             />
 
             <Typography sx={{ color: "grey.500", mb: 2, fontSize: 13 }}>
-              Follow us on social media for the latest on what's happening on
-              TCT!
+              {
+                "Follow us on social media for the latest on what's happening on TCT!"
+              }
             </Typography>
 
             <Box>
