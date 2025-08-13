@@ -2,6 +2,9 @@ import type {
   CardProps,
   SecondaryImage,
   CardEntry,
+  CardAspectRatio,
+  CardTag,
+  PositionOffsets,
 } from "@/lifeUi/components/Card/Card.types";
 import type { CardSection } from "@/pages/ShelfForHome";
 
@@ -13,10 +16,10 @@ export interface Preset {
   showTitle?: boolean;
   imageKey?: string;
   useSecondaryAsBackground?: boolean;
-  badges?: CardProps["tags"];
+  badges?: CardTag[];
   secondaryImage?: SecondaryImage;
-  aspectRatio?: CardProps["aspectRatio"];
-  positionOffsets?: CardProps["positionOffsets"];
+  aspectRatio?: CardAspectRatio;
+  positionOffsets?: PositionOffsets;
   styles?: CardProps["styles"];
 }
 
@@ -33,6 +36,29 @@ export interface HPCEntry {
   feed_url: string;
   title?: string;
   index?: number;
+}
+
+function mapFeedEntryToCardProps(entry: CardEntry, preset: Preset): CardProps {
+  const secondaryImage: SecondaryImage | undefined =
+    preset.useSecondaryAsBackground ? preset.secondaryImage : undefined;
+
+  return {
+    entry,
+    isEnhanced: preset.isEnhanced ?? false,
+    isEpisode: preset.isEpisode ?? false,
+    showTitle: preset.showTitle ?? false,
+    ImageKey: preset.imageKey ?? undefined,
+    useSecondaryAsBackground: preset.useSecondaryAsBackground ?? false,
+    tags: preset.badges ?? [],
+    secondaryImage,
+    aspectRatio: preset.aspectRatio ?? "16:9",
+    positionOffsets: preset.positionOffsets ?? undefined,
+    styles: {
+      hoverScale: preset.styles?.hoverScale ?? undefined,
+      border: preset.styles?.border,
+      hoverBorder: preset.styles?.hoverBorder,
+    },
+  };
 }
 
 async function fetchHPCFeedURL(): Promise<string> {
@@ -87,40 +113,6 @@ async function fetchFeedEntries(
   }
 }
 
-export async function getHeaderData() {
-  const res = await fetch(
-    "https://strapi-dev.trilogyapps.com/api/header?populate=all",
-    {
-      next: { revalidate: 60 },
-    }
-  );
-  if (!res.ok) throw new Error("Failed to fetch header data");
-  return res.json();
-}
-
-function mapFeedEntryToCardProps(entry: CardEntry, preset: Preset): CardProps {
-  const secondaryImage: SecondaryImage | undefined =
-    preset.useSecondaryAsBackground ? preset.secondaryImage : undefined;
-
-  return {
-    entry,
-    isEnhanced: preset.isEnhanced ?? false,
-    isEpisode: preset.isEpisode ?? false,
-    showTitle: preset.showTitle ?? false,
-    ImageKey: preset.imageKey ?? undefined,
-    useSecondaryAsBackground: preset.useSecondaryAsBackground ?? false,
-    tags: preset.badges ?? [],
-    secondaryImage,
-    aspectRatio: preset.aspectRatio ?? "16:9",
-    positionOffsets: preset.positionOffsets ?? undefined,
-    styles: {
-      hoverScale: preset.styles?.hoverScale ?? undefined,
-      border: preset.styles?.border,
-      hoverBorder: preset.styles?.hoverBorder,
-    },
-  };
-}
-
 export async function getCardProps(): Promise<CardSection[]> {
   const [listSettings, hpcFeedUrl] = await Promise.all([
     fetchListSettings(),
@@ -167,4 +159,54 @@ export async function getCardProps(): Promise<CardSection[]> {
   );
 
   return cardSections.filter(Boolean);
+}
+
+export async function getHeaderData() {
+  const res = await fetch(
+    "https://strapi-dev.trilogyapps.com/api/header?populate=all",
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch header data");
+  return res.json();
+}
+
+export async function getWatchData() {
+  const res = await fetch(
+    "https://strapi-dev.trilogyapps.com/api/shows-page?populate=all",
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch watch data");
+  return res.json();
+}
+
+export async function getWatchFilterData(feedId: string) {
+  const res = await fetch(
+    `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok)
+    throw new Error(`Failed to fetch filter data for feedId: ${feedId}`);
+  return res.json();
+}
+
+// Client-side function for dynamic filter calls
+export async function fetchFilteredEntries(feedId: string) {
+  try {
+    const res = await fetch(
+      `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`
+    );
+    if (!res.ok)
+      throw new Error(`Failed to fetch entries for feedId: ${feedId}`);
+    const data = await res.json();
+    return data.entry || [];
+  } catch (error) {
+    console.error("Error fetching filtered entries:", error);
+    return [];
+  }
 }

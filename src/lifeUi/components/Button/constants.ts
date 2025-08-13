@@ -1,0 +1,27 @@
+export const BUTTON_DEFAULTS = {
+  variant: "contained" as const,
+  size: "medium" as const,
+  disabled: false,
+  isActive: false,
+  sx: {
+    borderRadius: { xs: "12px", sm: "9999px" },
+    textTransform: "uppercase",
+    fontWeight: 700,
+    px: { xs: 2, sm: 3 },
+    py: { xs: 0.5, sm: 1 },
+    fontSize: {
+      xs: "0.5rem",
+      sm: "0.6rem",
+      md: "0.7rem",
+      lg: "0.8rem",
+      xl: "1.2rem",
+    },
+    backgroundColor: "#F5C242",
+    activeColor: "#000000",
+    inactiveColor: "#FFFFFF",
+    inactiveBorder: "1px solid rgba(255,255,255,0.7)",
+    inactiveBgHover: "rgba(255,255,255,0.1)",
+    activeBgHover: "#E0AE3C",
+    hoverBorderColor: "rgba(255,255,255,1)",
+  },
+};

@@ -23,6 +23,7 @@ import {
 
 function HorizontalSlider<T>({
   items,
+  getItemKey,
   renderItem,
   visibleSlides = DEFAULT_VISIBLE_SLIDES,
   spacing = DEFAULT_SPACING,
@@ -557,7 +558,7 @@ function HorizontalSlider<T>({
         >
           {items.map((item, index) => (
             <Box
-              key={index}
+              key={getItemKey ? getItemKey(item, index) : index}
               sx={{
                 flex:
                   presetName === "InlineFeature"

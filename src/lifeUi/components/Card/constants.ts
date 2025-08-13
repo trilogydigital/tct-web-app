@@ -97,16 +97,20 @@ export const CARD_DEFAULTS = {
     textOverflow: "ellipsis",
   },
   episodeTitle: {
+    fontSize: "1rem",
     fontWeight: 600,
     mt: 0.5,
     mb: 3,
-    color: "black",
+    color: "#fff",
     variant: /** @type {"h6"} */ "h6",
     component: "div",
   },
   episodeSummary: {
     variant: /** @type {"body2"} */ "body2",
-    color: "black",
+    fontSize: "0.7rem",
+    fontWeight: 400,
+
+    color: "#fff",
     lineHeight: 1.4,
   },
 };

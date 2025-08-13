@@ -34,6 +34,7 @@ export default function HeroSlider(props: HeroSliderProps) {
     secondaryImage: secondaryImageProp,
     arrowStyle: arrowStyleProp,
     paginationStyle: paginationStyleProp,
+    onSlideClick,
   } = props;
 
   const styles = { ...HERO_SLIDER_DEFAULTS.styles, ...(stylesProp || {}) };
@@ -156,6 +157,17 @@ export default function HeroSlider(props: HeroSliderProps) {
       )
     : {};
 
+  const handleSlideClick = (slideIndex: number, event: React.MouseEvent) => {
+    // Prevent click if clicking on CTA button
+    // if ((event.target as HTMLElement).closest("button")) {
+    //   return;
+    // }
+
+    if (onSlideClick) {
+      onSlideClick(slideIndex);
+    }
+  };
+
   // Arrow icons
   const LeftArrowIcon = leftArrowIcon ? (
     <Box
@@ -258,7 +270,7 @@ export default function HeroSlider(props: HeroSliderProps) {
         onSwiper={(swiper) => setSwiperInstance(swiper)}
         style={{ width: "100%", height: "100%" }}
       >
-        {slidesToRender.map((slide) => (
+        {slidesToRender.map((slide, slideIndex) => (
           <SwiperSlide key={slide.id}>
             <Box
               sx={{
@@ -275,7 +287,9 @@ export default function HeroSlider(props: HeroSliderProps) {
                 justifyContent: "flex-start",
                 pb: 8,
                 position: "relative",
+                cursor: onSlideClick ? "pointer" : "default",
               }}
+              onClick={(e) => handleSlideClick(slideIndex, e)}
             >
               <Box
                 sx={{
@@ -328,7 +342,11 @@ export default function HeroSlider(props: HeroSliderProps) {
                 {styles.showButton !== false && slide.ctaLink && (
                   <Button
                     variant="contained"
-                    href={slide.ctaLink}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSlideClick(slideIndex, e);
+                      // window.open(slide.ctaLink, "_blank");
+                    }}
                     sx={{
                       borderRadius: styles.ctaButtonBorderRadius || 1,
                       color: styles.ctaButtonColor,
@@ -393,6 +411,7 @@ export default function HeroSlider(props: HeroSliderProps) {
       {/* Prev Arrow */}
       <IconButton
         ref={prevRef}
+        onClick={(e) => e.stopPropagation()}
         className="hero-slider-arrow"
         sx={{
           position: "absolute",
@@ -431,6 +450,7 @@ export default function HeroSlider(props: HeroSliderProps) {
       {/* Next Arrow */}
       <IconButton
         ref={nextRef}
+        onClick={(e) => e.stopPropagation()}
         className="hero-slider-arrow"
         sx={{
           position: "absolute",

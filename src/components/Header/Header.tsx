@@ -23,6 +23,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import type { HeaderProps, MenuItem as MenuItemType } from "./Header.types";
 
 type Props = {
@@ -30,6 +31,8 @@ type Props = {
 };
 
 export default function Header({ data }: Props) {
+  const pathname = usePathname() as string;
+
   const { styles } = data;
   const underlineColor = styles?.underlineColor || "#FFD700";
 
@@ -42,6 +45,10 @@ export default function Header({ data }: Props) {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  if (pathname.startsWith("/player")) {
+    return null;
+  }
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, id: number) => {
     setAnchorEl(event.currentTarget);
@@ -328,7 +335,8 @@ export default function Header({ data }: Props) {
         <Toolbar
           sx={{
             justifyContent: "space-between",
-            backgroundColor: "#000",
+            background:
+              "linear-gradient(to bottom, #010a18 0%, #071020 50%, rgba(16, 26, 40, 0.4) 70%)",
             color: "#fff",
             minHeight: "64px !important",
             height: 64,
@@ -364,6 +372,7 @@ export default function Header({ data }: Props) {
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
         {renderDrawerMenu()}
       </Drawer>
+      <Box sx={{ height: "64px" }} />
     </>
   );
 }

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import CacheProvider from "./CacheProvider";
 import Header from "@/components/Header/Header";
 import { getHeaderData } from "@/lib/services/api.service";
+import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "TCT",
@@ -21,7 +22,8 @@ export default async function RootLayout({
       <body>
         <CacheProvider>
           <Header data={headerData.data} />
-          <main style={{ paddingTop: "64px" }}>{children}</main>
+          <main>{children}</main>
+          <Footer />
         </CacheProvider>
       </body>
     </html>
