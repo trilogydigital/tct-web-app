@@ -140,6 +140,12 @@ export default function ShelfForWatch({
     }
   };
 
+  const handleCardClick = (mediaId?: string) => {
+    if (mediaId) {
+      router.push(`/m?id=${mediaId}`);
+    }
+  };
+
   const mapCardStyleToProps = (entry: CardEntry, cardStyle: CardStyle) => ({
     entry,
     isEnhanced: cardStyle.isEnhanced,
@@ -221,7 +227,10 @@ export default function ShelfForWatch({
 
               return (
                 <Grid key={item.id} item>
-                  <Card {...cardProps} />
+                  <Card
+                    {...cardProps}
+                    onClick={() => handleCardClick(item.id)}
+                  />
                 </Grid>
               );
             })}

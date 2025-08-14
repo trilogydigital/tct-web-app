@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import WatchContent from "./context";
+import WatchContent from "./content";
 import Loader from "@/components/Loader/Loader";
 
 export default function WatchPage() {

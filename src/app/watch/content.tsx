@@ -7,7 +7,6 @@ export default async function WatchContent() {
   // Get the first filter's feedId for initial data
   const firstFilter = watchData.data?.filters?.filter?.[0];
   let initialEntries = [];
-  console.log("First Filter:", firstFilter);
   if (firstFilter?.feedid) {
     const initialFilterData = await getWatchFilterData(firstFilter.feedid);
     initialEntries = initialFilterData.entry || [];

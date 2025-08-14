@@ -1,4 +1,3 @@
-// components/Footer.tsx
 "use client";
 
 import React from "react";
@@ -12,9 +11,6 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import YouTubeIcon from "@mui/icons-material/YouTube";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 const textfieldSx = {
@@ -28,30 +24,39 @@ const textfieldSx = {
 
 export default function Footer() {
   return (
-    <Box component="footer" sx={{ bgcolor: "#050a18", color: "#fff", py: 6 }}>
-      <Container maxWidth="xl">
+    <Box
+      component="footer"
+      sx={{ bgcolor: "#030816", color: "#fff", py: 6, mt: 4 }}
+    >
+      <Container disableGutters>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start",
             flexWrap: "wrap",
+            justifyContent: "center",
             gap: 6,
             pb: 4,
             textAlign: { xs: "center", md: "left" },
+            maxWidth: { xs: "80%", lg: "1200px" },
+            mx: "auto",
           }}
         >
           {/* LEFT: Logo + social */}
-          <Box sx={{ flex: "0 0 300px" }}>
+          <Box sx={{ flex: 1, minWidth: 240 }}>
             <Typography sx={{ mb: 1, fontWeight: 700, fontSize: 13 }}>
               TCT Ministries
             </Typography>
 
             <Box
               component="img"
-              src="/tct-logo.png"
+              src="/logo-tct.png"
               alt="TCT Logo"
-              sx={{ height: 36, mb: 2, display: "block" }}
+              sx={{
+                height: 36,
+                my: 3,
+                display: "block",
+                mx: { xs: "auto", md: 0 },
+              }}
             />
 
             <Typography sx={{ color: "grey.500", mb: 2, fontSize: 13 }}>
@@ -60,30 +65,79 @@ export default function Footer() {
               }
             </Typography>
 
-            <Box>
-              <IconButton color="inherit" size="small" aria-label="instagram">
-                <InstagramIcon />
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                justifyContent: { xs: "center", md: "flex-start" },
+              }}
+            >
+              <IconButton
+                component="a"
+                href="https://www.instagram.com/tcttv/"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+                size="small"
+                aria-label="instagram"
+              >
+                <Box
+                  component="img"
+                  src="/instagram.png"
+                  alt="Instagram"
+                  sx={{ width: 24, height: 24 }}
+                />
               </IconButton>
-              <IconButton color="inherit" size="small" aria-label="facebook">
-                <FacebookIcon />
+
+              <IconButton
+                component="a"
+                href="https://www.facebook.com/tcttv"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+                size="small"
+                aria-label="facebook"
+              >
+                <Box
+                  component="img"
+                  src="/facebook.png"
+                  alt="Facebook"
+                  sx={{ width: 24, height: 24 }}
+                />
               </IconButton>
-              <IconButton color="inherit" size="small" aria-label="youtube">
-                <YouTubeIcon />
+
+              <IconButton
+                component="a"
+                href="https://www.youtube.com/c/TCTTVNet"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+                size="small"
+                aria-label="youtube"
+              >
+                <Box
+                  component="img"
+                  src="/YouTube.png"
+                  alt="YouTube"
+                  sx={{ width: 24, height: 24 }}
+                />
               </IconButton>
             </Box>
           </Box>
 
-          {/* CENTER: two-block columns (Watch/Resources & Quick Links/Legal) */}
+          {/* CENTER: two-block columns */}
           <Box
             sx={{
-              flex: "0 0 300px",
+              flex: 1,
+              minWidth: 240,
               display: "flex",
               gap: 6,
               fontSize: "0.75rem",
+              justifyContent: { xs: "center", md: "flex-start" },
             }}
           >
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <Typography sx={{ color: "#facc15", fontWeight: 700 }}>
+              <Typography sx={{ color: "#e4981a", fontWeight: 700 }}>
                 Watch
               </Typography>
               <Link
@@ -116,7 +170,7 @@ export default function Footer() {
               </Link>
 
               <Box sx={{ mt: 2 }}>
-                <Typography sx={{ color: "#facc15", fontWeight: 700 }}>
+                <Typography sx={{ color: "#e4981a", fontWeight: 700 }}>
                   Resources
                 </Typography>
                 <Link
@@ -137,7 +191,7 @@ export default function Footer() {
             </Box>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <Typography sx={{ color: "#facc15", fontWeight: 700 }}>
+              <Typography sx={{ color: "#e4981a", fontWeight: 700 }}>
                 Quick Links
               </Typography>
               <Link
@@ -170,7 +224,7 @@ export default function Footer() {
               </Link>
 
               <Box sx={{ mt: 2 }}>
-                <Typography sx={{ color: "#facc15", fontWeight: 700 }}>
+                <Typography sx={{ color: "#e4981a", fontWeight: 700 }}>
                   Legal
                 </Typography>
                 <Link
@@ -191,11 +245,11 @@ export default function Footer() {
             </Box>
           </Box>
 
-          {/* RIGHT: Newsletter (will NOT wrap heading) */}
-          <Box sx={{ flex: "0 0 300px" }}>
+          {/* RIGHT: Newsletter */}
+          <Box sx={{ flex: 1, minWidth: 240 }}>
             <Typography
               variant="subtitle1"
-              sx={{ fontWeight: 700, whiteSpace: "nowrap", mb: 2 }} // <- prevent wrapping
+              sx={{ fontWeight: 700, whiteSpace: "nowrap", mb: 2 }}
             >
               Subscribe To Our Newsletter
             </Typography>
@@ -245,6 +299,42 @@ export default function Footer() {
             >
               Subscribe
             </Button>
+
+            {/* Platform Logos */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                flexWrap: "wrap",
+                mt: 3,
+                justifyContent: { xs: "center", md: "flex-start" },
+              }}
+            >
+              <Box
+                component="img"
+                src="/appletv-logo.png"
+                alt="Apple TV"
+                sx={{ height: 16 }}
+              />
+              <Box
+                component="img"
+                src="/firetv-logo.png"
+                alt="Fire TV"
+                sx={{ height: 16 }}
+              />
+              <Box
+                component="img"
+                src="/roku-logo.png"
+                alt="Roku"
+                sx={{ height: 16 }}
+              />
+              <Box
+                component="img"
+                src="/androidtv-logo.png"
+                alt="Android TV"
+                sx={{ height: 16 }}
+              />
+            </Box>
           </Box>
         </Box>
 
@@ -254,23 +344,37 @@ export default function Footer() {
             borderTop: "1px solid rgba(255,255,255,0.06)",
             pt: 3,
             display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: { xs: 1, sm: 0 },
             justifyContent: "space-between",
-            alignItems: "center",
-            color: "grey.500",
+            alignItems: { xs: "center", sm: "center" },
+            color: "#eab308",
+            fontSize: { xs: "0.7rem", sm: "0.75rem" },
+            textAlign: { xs: "center", sm: "left" },
+            maxWidth: { md: "80%", lg: "1200px" },
+            mx: "auto",
           }}
         >
-          <Typography variant="caption">
+          <Typography sx={{ fontSize: "inherit", color: "#eab308" }}>
             © 2025 Trilogy Digital Inc. All rights reserved.
           </Typography>
 
-          <Box>
-            <Link href="#" sx={{ color: "grey.400", mr: 2 }}>
+          <Box
+            sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+          >
+            <Link
+              href="#"
+              sx={{ color: "#eab308", mr: 2, fontSize: "inherit" }}
+            >
               Privacy Policy
             </Link>
-            <Link href="#" sx={{ color: "grey.400", mr: 2 }}>
+            <Link
+              href="#"
+              sx={{ color: "#eab308", mr: 2, fontSize: "inherit" }}
+            >
               Terms of Service
             </Link>
-            <Link href="#" sx={{ color: "grey.400" }}>
+            <Link href="#" sx={{ color: "#eab308", fontSize: "inherit" }}>
               Cookies Settings
             </Link>
           </Box>

@@ -7,8 +7,11 @@ const theme = createTheme({
       main: "#1976d2",
     },
     background: {
-      default: "#000000",
+      default: "#030816",
     },
+  },
+  typography: {
+    fontFamily: "Inter, Arial, sans-serif",
   },
 });
 

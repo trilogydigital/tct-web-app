@@ -4,6 +4,9 @@ import CacheProvider from "./CacheProvider";
 import Header from "@/components/Header/Header";
 import { getHeaderData } from "@/lib/services/api.service";
 import Footer from "@/components/Footer/Footer";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "TCT",
@@ -18,7 +21,7 @@ export default async function RootLayout({
   const headerData = await getHeaderData();
   console.log("Header data:", headerData);
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <body>
         <CacheProvider>
           <Header data={headerData.data} />

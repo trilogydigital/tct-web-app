@@ -210,3 +210,23 @@ export async function fetchFilteredEntries(feedId: string) {
     return [];
   }
 }
+export async function getMediaData(mediaId: string) {
+  const res = await fetch(
+    `https://tbndsp-prod.trilogyapps.com/v1/media?mediaid=${mediaId}`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch media data");
+  return res.json();
+}
+export async function getPlaylistData(seriesId: string) {
+  const res = await fetch(
+    `https://tbndsp-prod.trilogyapps.com/v1/playlist?playlistid=${seriesId}&page_limit=100&page_offset=1`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch playlist data");
+  return res.json();
+}
