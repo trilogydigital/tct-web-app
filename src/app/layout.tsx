@@ -5,6 +5,7 @@ import Header from "@/components/Header/Header";
 import { getHeaderData } from "@/lib/services/api.service";
 import Footer from "@/components/Footer/Footer";
 import { Inter } from "next/font/google";
+import SubscribeToNewsletter from "@/components/SubscribeToNewsletter/SubscribeToNewsletter";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -26,6 +27,7 @@ export default async function RootLayout({
         <CacheProvider>
           <Header data={headerData.data} />
           <main>{children}</main>
+          <SubscribeToNewsletter />
           <Footer />
         </CacheProvider>
       </body>

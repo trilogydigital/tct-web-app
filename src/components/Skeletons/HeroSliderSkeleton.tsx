@@ -12,7 +12,7 @@ export default function HeroSliderSkeleton() {
       <Skeleton
         variant="rectangular"
         width="100%"
-        height={500}
+        height={600}
         sx={{
           bgcolor: "grey.800",
         }}

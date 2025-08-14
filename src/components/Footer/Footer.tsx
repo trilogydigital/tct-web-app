@@ -14,12 +14,13 @@ import {
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 const textfieldSx = {
-  "& .MuiInputBase-input": { color: "rgba(255,255,255,0.9)" },
+  "& .MuiInputBase-input": { color: "rgba(255,255,255,0.95)" },
   "& .MuiOutlinedInput-root": {
-    "& fieldset": { borderColor: "rgba(255,255,255,0.08)" },
-    "&:hover fieldset": { borderColor: "rgba(255,255,255,0.14)" },
+    "& fieldset": { borderColor: "rgba(255,255,255,0.6)" },
+    "&:hover fieldset": { borderColor: "rgba(255,255,255,0.85)" },
+    "&.Mui-focused fieldset": { borderColor: "rgba(255,255,255,0.85)" },
   },
-  "& input::placeholder": { color: "rgba(255,255,255,0.45)" },
+  "& input::placeholder": { color: "rgba(255,255,255,0.8)" },
 } as const;
 
 export default function Footer() {
@@ -288,7 +289,7 @@ export default function Footer() {
             <Button
               variant="contained"
               sx={{
-                mt: 1,
+                mt: 2,
                 bgcolor: "#facc15",
                 color: "black",
                 fontWeight: 700,

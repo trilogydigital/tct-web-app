@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useMedia } from "@/hooks/useMedia";
+import Loader from "@/components/Loader/Loader";
 
 export default function MediaScreen({ mediaId }: { mediaId?: string }) {
   const { media, loading, error } = useMedia(mediaId);
@@ -11,6 +12,7 @@ export default function MediaScreen({ mediaId }: { mediaId?: string }) {
   useEffect(() => {
     if (!loading && media?.entry?.[0]?.type?.value) {
       const type = media.entry[0].type.value.toLowerCase();
+
       if (type === "video") {
         router.push(`/player?id=${mediaId}`);
       } else if (type === "series") {
@@ -22,12 +24,13 @@ export default function MediaScreen({ mediaId }: { mediaId?: string }) {
     }
   }, [media, loading, mediaId, router]);
 
-  if (loading) return <p style={{ color: "white" }}>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (loading || (!loading && media?.entry?.[0]?.type?.value)) {
+    return <Loader />;
+  }
 
-  return (
-    <pre style={{ color: "white", whiteSpace: "pre-wrap" }}>
-      {JSON.stringify(media, null, 2)}
-    </pre>
-  );
+  if (error) {
+    return <p style={{ color: "red" }}>Error: {error}</p>;
+  }
+
+  return null;
 }
