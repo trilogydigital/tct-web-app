@@ -1,0 +1,10 @@
+node_modules
+.next/cache
+.next/trace
+.next/server/flight-server-css-manifest.json
+npm-debug.log
+yarn-error.log
+.env*
+.git
+.gitignore
+README.md
