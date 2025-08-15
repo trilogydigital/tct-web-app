@@ -107,7 +107,7 @@ export const CARD_DEFAULTS = {
   },
   episodeSummary: {
     variant: /** @type {"body2"} */ "body2",
-    fontSize: "0.7rem",
+    fontSize: "0.8rem",
     fontWeight: 400,
 
     color: "#fff",

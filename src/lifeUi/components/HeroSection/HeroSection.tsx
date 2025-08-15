@@ -58,7 +58,8 @@ export default function HeroSection(props: HeroSectionProps) {
 
   // Text values - get from appropriate source
   const baseTitle = dataSource.title || "";
-  const baseDescription = dataSource.summary || "";
+  const baseDescription =
+    dataSource.summary || HERO_Section_DEFAULTS.description || "";
 
   // For CTA, check extensions first, then fallback
   let baseCta = HERO_Section_DEFAULTS.fallbackCtaText;

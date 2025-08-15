@@ -40,7 +40,7 @@ interface FilterItem {
   [key: string]: unknown;
 }
 
-interface CardStyle {
+export interface CardStyle {
   presetName: string;
   isEnhanced: boolean;
   isEpisode: boolean;

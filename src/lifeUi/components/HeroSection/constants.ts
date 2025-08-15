@@ -5,9 +5,12 @@ export const HERO_Section_DEFAULTS = {
   hoverCursor: "pointer",
   imageSize: "640",
   descriptionLineClamp: 4,
+  description:
+    '"Ask the Pastor" is typically a program, segment, or online feature where viewers, listeners, or readers submit questions about faith, the Bible, Christian living, or theology, and a pastor answers them with guidance based on scripture and Christian principles. It’s meant to offer spiritual insight, clarify doubts, and provide practical, faith-based advice.',
 
   styles: {
     showTitle: false,
+    showDescription: true,
     titleFontSize: {
       xs: "0.8rem",
       sm: "1.5rem",
@@ -70,8 +73,8 @@ export const HERO_Section_DEFAULTS = {
     keyText: "",
     src: "",
     position: "bottom-right" as const,
-    width: "400px",
-    height: "120px",
+    width: "300px",
+    height: "80px",
     offsetX: 0,
     offsetY: 0,
   },

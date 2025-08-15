@@ -238,3 +238,27 @@ export async function getPlaylistData(seriesId: string) {
   if (!res.ok) throw new Error("Failed to fetch playlist data");
   return res.json();
 }
+
+export async function getSeriesLandingStyles() {
+  const res = await fetch(
+    "https://strapi-dev.trilogyapps.com/api/shows-landing-page?populate=all",
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch series landing styles");
+  return res.json();
+}
+
+// Updated function to fetch both playlist data and styles
+export async function getSeriesLandingData(seriesId: string) {
+  const [playlistData, stylesData] = await Promise.all([
+    getPlaylistData(seriesId),
+    getSeriesLandingStyles(),
+  ]);
+
+  return {
+    playlistData,
+    stylesData: stylesData.data,
+  };
+}

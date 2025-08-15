@@ -1,5 +1,5 @@
 import SeriesLanding from "../../pages/SeriesLanding";
-import { getPlaylistData } from "@/lib/services/api.service";
+import { getSeriesLandingData } from "@/lib/services/api.service";
 
 export default async function SeriesContent({
   SeriesId,
@@ -10,7 +10,7 @@ export default async function SeriesContent({
     throw new Error("Missing playlist ID");
   }
 
-  const playlistData = await getPlaylistData(SeriesId);
+  const { playlistData, stylesData } = await getSeriesLandingData(SeriesId);
 
-  return <SeriesLanding playlistData={playlistData} />;
+  return <SeriesLanding playlistData={playlistData} stylesData={stylesData} />;
 }
