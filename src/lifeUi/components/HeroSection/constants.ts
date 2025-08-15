@@ -7,6 +7,7 @@ export const HERO_Section_DEFAULTS = {
   descriptionLineClamp: 4,
 
   styles: {
+    showTitle: false,
     titleFontSize: {
       xs: "0.8rem",
       sm: "1.5rem",
@@ -54,21 +55,23 @@ export const HERO_Section_DEFAULTS = {
     paddingLeft: 0,
     spacingBetweenText: 4,
     responsivePaddingLeft: { xs: 6, sm: 8, md: 10, xl: 12 },
+
+    descriptionKey: "shortDescription",
   },
 
-  imageKeySelect: "imgFeaturedCarousel16x6",
+  imageKeySelect: "imgFeaturedCarousel6x9",
   imageKeyText: "",
   imageKeySrc: "",
   aspectRatio: "16:6" as const,
 
   secondaryImage: {
-    show: false,
-    keySelect: "",
+    show: true,
+    keySelect: "imgSeriesLogo",
     keyText: "",
     src: "",
     position: "bottom-right" as const,
-    width: "40px",
-    height: "40px",
+    width: "400px",
+    height: "120px",
     offsetX: 0,
     offsetY: 0,
   },

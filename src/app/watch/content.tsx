@@ -1,18 +1,46 @@
-import { getWatchData, getWatchFilterData } from "@/lib/services/api.service";
+import {
+  getWatchData,
+  getFiltersData,
+  getWatchFilterData,
+} from "@/lib/services/api.service";
 import ShelfForWatch from "@/pages/ShelfForWatch";
 
 export default async function WatchContent() {
   const watchData = await getWatchData();
+  const data = watchData.data;
 
-  // Get the first filter's feedId for initial data
-  const firstFilter = watchData.data?.filters?.filter?.[0];
+  // Fetch filters from the filtersFeed URL
+  let filtersData = [];
   let initialEntries = [];
-  if (firstFilter?.feedid) {
-    const initialFilterData = await getWatchFilterData(firstFilter.feedid);
-    initialEntries = initialFilterData.entry || [];
+
+  if (data?.filtersFeed) {
+    try {
+      const filtersResponse = await getFiltersData(data.filtersFeed);
+      filtersData = filtersResponse.entry || [];
+
+      // Get initial data using the first filter and grid's feedUrl
+      if (filtersData.length > 0 && data?.grid?.feedUrl) {
+        const firstFilter = filtersData[0];
+        const playlistId = firstFilter[data.grid.datakey || "seriesId"];
+
+        if (playlistId) {
+          const initialFilterData = await getWatchFilterData(
+            data.grid.feedUrl,
+            playlistId
+          );
+          initialEntries = initialFilterData.entry || [];
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching filters data:", error);
+    }
   }
 
   return (
-    <ShelfForWatch watchData={watchData.data} initialEntries={initialEntries} />
+    <ShelfForWatch
+      watchData={data}
+      filtersData={filtersData}
+      initialEntries={initialEntries}
+    />
   );
 }

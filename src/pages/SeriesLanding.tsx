@@ -8,6 +8,12 @@ import { Box, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 
 interface PlaylistData {
+  id?: string;
+  title: string;
+  summary?: string;
+  extensions?: {
+    [key: string]: unknown;
+  };
   entry: CardEntry[];
 }
 
@@ -28,20 +34,8 @@ export default function SeriesLanding({ playlistData }: SeriesLandingProps) {
   return (
     <>
       <Box mb={6}>
-        {heroVisible && items[0] ? (
-          <HeroSection
-            aspectRatio="16:6"
-            entry={items[0]}
-            styles={{
-              showTitle: false,
-            }}
-            secondaryImage={{
-              show: true,
-              keyText: "1920",
-              width: "200px",
-              height: "80px",
-            }}
-          />
+        {heroVisible && playlistData ? (
+          <HeroSection aspectRatio="16:6" playlistData={playlistData} />
         ) : (
           <HeroSliderSkeleton />
         )}

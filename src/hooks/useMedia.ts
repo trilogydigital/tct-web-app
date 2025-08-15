@@ -3,8 +3,17 @@
 import { useEffect, useState } from "react";
 import { getMediaData } from "@/lib/services/api.service";
 
+type MediaEntry = {
+  type?: { value?: string };
+  extensions?: { seriesId?: string };
+};
+
+type MediaResponse = {
+  entry?: MediaEntry[];
+};
+
 export function useMedia(mediaId?: string) {
-  const [media, setMedia] = useState<any>(null);
+  const [media, setMedia] = useState<MediaResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

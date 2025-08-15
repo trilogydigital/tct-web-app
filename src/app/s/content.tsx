@@ -2,17 +2,15 @@ import SeriesLanding from "../../pages/SeriesLanding";
 import { getPlaylistData } from "@/lib/services/api.service";
 
 export default async function SeriesContent({
-  searchParams,
+  SeriesId,
 }: {
-  searchParams: Promise<{ id?: string }>;
+  SeriesId?: string;
 }) {
-  const resolvedParams = await searchParams;
-
-  if (!resolvedParams.id) {
+  if (!SeriesId) {
     throw new Error("Missing playlist ID");
   }
 
-  const playlistData = await getPlaylistData(resolvedParams.id);
+  const playlistData = await getPlaylistData(SeriesId);
 
   return <SeriesLanding playlistData={playlistData} />;
 }

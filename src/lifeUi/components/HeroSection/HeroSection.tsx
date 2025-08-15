@@ -1,12 +1,20 @@
 import { Box, Typography, Button } from "@mui/material";
-import type { HeroSectionProps, ApiEntry } from "./HeroSection.types";
+import type {
+  HeroSectionProps,
+  ApiEntry,
+  PlaylistData,
+} from "./HeroSection.types";
 import { HERO_Section_DEFAULTS } from "./constants";
 import { getAspectRatioValue } from "../../utils/Card.helpers";
-import { getImageUrl, getTextValueByKey } from "../../utils/HeroSlider.helpers";
+import {
+  getHeroImageUrl,
+  getHeroTextValueByKey,
+} from "../../utils/HeroSection.helpers";
 
 export default function HeroSection(props: HeroSectionProps) {
   const {
     entry,
+    playlistData,
     styles: stylesProp,
     imageKeySelect = HERO_Section_DEFAULTS.imageKeySelect,
     imageKeyText = HERO_Section_DEFAULTS.imageKeyText,
@@ -15,8 +23,11 @@ export default function HeroSection(props: HeroSectionProps) {
     secondaryImage: secondaryImageProp,
   } = props;
 
-  if (!entry) return null;
-  const item: ApiEntry = entry;
+  // Determine which data source to use - prioritize playlistData
+  const dataSource: ApiEntry | PlaylistData | null =
+    playlistData || entry || null;
+
+  if (!dataSource) return null;
 
   // Merge defaults with incoming props
   const styles = { ...HERO_Section_DEFAULTS.styles, ...(stylesProp || {}) };
@@ -26,8 +37,8 @@ export default function HeroSection(props: HeroSectionProps) {
   };
 
   // Main background image
-  const backgroundImage = getImageUrl(
-    item,
+  const backgroundImage = getHeroImageUrl(
+    dataSource,
     imageKeySelect,
     imageKeyText,
     imageKeySrc,
@@ -37,33 +48,49 @@ export default function HeroSection(props: HeroSectionProps) {
   // Secondary image
   let secondaryImageUrl = "";
   if (secondaryImage.show) {
-    secondaryImageUrl = getImageUrl(
-      item,
+    secondaryImageUrl = getHeroImageUrl(
+      dataSource,
       secondaryImage.keySelect,
       secondaryImage.keyText,
       secondaryImage.src
     );
   }
 
-  // Text values
-  const baseTitle = item.title || "";
-  const baseDescription = item.summary || "";
-  const baseCta =
-    typeof item.extensions?.watchButtonLabel === "string"
-      ? item.extensions.watchButtonLabel
-      : HERO_Section_DEFAULTS.fallbackCtaText;
+  // Text values - get from appropriate source
+  const baseTitle = dataSource.title || "";
+  const baseDescription = dataSource.summary || "";
+
+  // For CTA, check extensions first, then fallback
+  let baseCta = HERO_Section_DEFAULTS.fallbackCtaText;
+  if (
+    dataSource.extensions?.watchButtonLabel &&
+    typeof dataSource.extensions.watchButtonLabel === "string"
+  ) {
+    baseCta = dataSource.extensions.watchButtonLabel;
+  }
 
   const finalTitle = styles.titleKey
-    ? getTextValueByKey(item, styles.titleKey, baseTitle)
+    ? getHeroTextValueByKey(dataSource, styles.titleKey, baseTitle)
     : baseTitle;
 
   const finalDescription = styles.descriptionKey
-    ? getTextValueByKey(item, styles.descriptionKey, baseDescription)
+    ? getHeroTextValueByKey(dataSource, styles.descriptionKey, baseDescription)
     : baseDescription;
 
   const finalCtaText = styles.ctaKey
-    ? getTextValueByKey(item, styles.ctaKey, baseCta)
+    ? getHeroTextValueByKey(dataSource, styles.ctaKey, baseCta)
     : baseCta;
+
+  // Get link - for playlist data, we might need to construct or get from extensions
+  let ctaLink = "#";
+  if ("link" in dataSource && dataSource.link?.href) {
+    ctaLink = dataSource.link.href;
+  } else if (
+    dataSource.extensions?.link &&
+    typeof dataSource.extensions.link === "string"
+  ) {
+    ctaLink = dataSource.extensions.link;
+  }
 
   const aspectRatioValue = getAspectRatioValue(aspectRatio);
 
@@ -115,6 +142,7 @@ export default function HeroSection(props: HeroSectionProps) {
               {finalTitle}
             </Typography>
           )}
+
           {/* Secondary Image below Title */}
           {secondaryImage.show && secondaryImageUrl && (
             <Box
@@ -131,13 +159,14 @@ export default function HeroSection(props: HeroSectionProps) {
               }}
             />
           )}
+
           {/* CTA Button */}
-          {styles.showButton !== false && item.link?.href && (
+          {styles.showButton !== false && (
             <Button
               variant="contained"
               onClick={(e) => {
                 e.stopPropagation();
-                window.open(item.link?.href, "_blank");
+                window.open(ctaLink, "_blank");
               }}
               sx={{
                 borderRadius: styles.ctaButtonBorderRadius,
@@ -159,6 +188,7 @@ export default function HeroSection(props: HeroSectionProps) {
               {finalCtaText}
             </Button>
           )}
+
           {/* Description */}
           {styles.showDescription !== false && (
             <Typography
@@ -181,27 +211,6 @@ export default function HeroSection(props: HeroSectionProps) {
             </Typography>
           )}
         </Box>
-
-        {/* absolute Secondary Image */}
-        {/* {secondaryImage.show && secondaryImageUrl && (
-          <Box
-            component="img"
-            src={secondaryImageUrl}
-            alt="Secondary"
-            sx={{
-              position: "absolute",
-              width: secondaryImage.width,
-              height: secondaryImage.height,
-              objectFit: "cover",
-              zIndex: 2,
-              ...getSecondaryImagePosition(
-                secondaryImage.position,
-                secondaryImage.offsetX,
-                secondaryImage.offsetY
-              ),
-            }}
-          />
-        )} */}
 
         {/* Overlay */}
         <Box

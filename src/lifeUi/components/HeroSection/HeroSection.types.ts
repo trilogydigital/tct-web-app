@@ -25,6 +25,17 @@ export interface ApiEntry {
   };
 }
 
+// New interface for playlist-level data
+export interface PlaylistData {
+  id?: string;
+  title: string;
+  summary?: string;
+  extensions?: {
+    [key: string]: unknown;
+  };
+  entry?: ApiEntry[];
+}
+
 export interface HeroSectionStyles {
   titleFontSize?:
     | string
@@ -163,10 +174,11 @@ export interface SecondaryImageProps {
   offsetY?: number;
 }
 
-// Main Props
+// Main Props - Updated to accept both entry and playlistData
 export interface HeroSectionProps {
   id?: string;
   entry?: ApiEntry;
+  playlistData?: PlaylistData;
   imageUrl?: string;
   title?: string;
   description?: string;

@@ -1,11 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useMedia } from "@/hooks/useMedia";
 import Loader from "@/components/Loader/Loader";
 
-export default function MediaScreen({ mediaId }: { mediaId?: string }) {
+export default function MediaScreenRouter() {
+  const searchParams = useSearchParams();
+  const mediaId = searchParams?.get("id") ?? undefined;
+
   const { media, loading, error } = useMedia(mediaId);
   const router = useRouter();
 

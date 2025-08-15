@@ -183,26 +183,34 @@ export async function getWatchData() {
   return res.json();
 }
 
-export async function getWatchFilterData(feedId: string) {
-  const res = await fetch(
-    `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`,
-    {
-      next: { revalidate: 60 },
-    }
-  );
+export async function getFiltersData(filtersUrl: string) {
+  const res = await fetch(filtersUrl, {
+    next: { revalidate: 60 },
+  });
   if (!res.ok)
-    throw new Error(`Failed to fetch filter data for feedId: ${feedId}`);
+    throw new Error(`Failed to fetch filters data from: ${filtersUrl}`);
+  return res.json();
+}
+
+// Updated function to use the grid's feedUrl template
+export async function getWatchFilterData(feedUrl: string, playlistId: string) {
+  const url = feedUrl.replace("{{playlistid}}", playlistId);
+  const res = await fetch(url, {
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) throw new Error(`Failed to fetch filter data from: ${url}`);
   return res.json();
 }
 
 // Client-side function for dynamic filter calls
-export async function fetchFilteredEntries(feedId: string) {
+export async function fetchFilteredEntries(
+  feedUrl: string,
+  playlistId: string
+) {
   try {
-    const res = await fetch(
-      `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`
-    );
-    if (!res.ok)
-      throw new Error(`Failed to fetch entries for feedId: ${feedId}`);
+    const url = feedUrl.replace("{{playlistid}}", playlistId);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch entries from: ${url}`);
     const data = await res.json();
     return data.entry || [];
   } catch (error) {

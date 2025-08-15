@@ -19,17 +19,25 @@ import HorizontalList from "@/lifeUi/components/HorizontalList/HorizontalList";
 import SkeletonGrid from "@/components/Skeletons/SkeletonGrid";
 import { Skeleton } from "@mui/material";
 
-interface FilterItem {
-  id: number;
-  label: string;
-  feedid: string;
+// Helper: Get nested value from object using dot path like "extensions.seriesId"
+function getValueByPath<T extends object, R>(
+  obj: T,
+  path: string
+): R | undefined {
+  return path.split(".").reduce<unknown>((acc, key) => {
+    if (acc !== null && typeof acc === "object" && key in acc) {
+      return (acc as Record<string, unknown>)[key];
+    }
+    return undefined;
+  }, obj) as R | undefined;
 }
 
-interface FilterData {
-  id: number;
-  label: string;
-  buttonType: string;
-  filter: FilterItem[];
+// Updated interfaces
+interface FilterItem {
+  id: string;
+  title: string;
+  seriesId?: string;
+  [key: string]: unknown;
 }
 
 interface CardStyle {
@@ -55,53 +63,95 @@ interface CardStyle {
 interface GridData {
   label: string;
   titleKey: string;
+  feedUrl: string;
+  datakey: string;
   cardStyle: CardStyle;
 }
 
+interface BorderRadius {
+  id: number;
+  topLeft: number;
+  topRight: number;
+  bottomLeft: number;
+  bottomRight: number;
+}
+
+interface BorderStyleData {
+  id: number;
+  width: number;
+  style: "solid" | "dashed" | "dotted";
+  color: string;
+  radius: BorderRadius;
+}
+
+interface FilterStyle {
+  label: string;
+  buttonType: string;
+  textcolor?: string;
+  backgroundcolor?: string;
+  borderstyle?: BorderStyleData;
+}
+
 interface WatchData {
-  filters: FilterData;
+  filtersFeed: string;
   grid: GridData;
+  filterstyle: FilterStyle;
 }
 
 interface ShelfForWatchProps {
   watchData: WatchData;
+  filtersData: FilterItem[];
   initialEntries: CardEntry[];
 }
 
 export default function ShelfForWatch({
   watchData,
+  filtersData = [],
   initialEntries = [],
 }: ShelfForWatchProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const [entries, setEntries] = useState<CardEntry[]>(initialEntries);
   const [initializing, setInitializing] = useState(true);
   const [filterLoading, setFilterLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string>("");
 
-  const filters = useMemo(
-    () => watchData?.filters?.filter || [],
-    [watchData?.filters?.filter]
-  );
+  const filters = useMemo(() => filtersData || [], [filtersData]);
   const cardStyle = watchData?.grid?.cardStyle;
+  const filterStyle = watchData?.filterstyle;
+  const dataKey = watchData?.grid?.datakey || "seriesId";
+  const feedUrl = watchData?.grid?.feedUrl;
 
   // Initialize first filter and data
   useEffect(() => {
-    if (!filters.length) {
+    if (!filters.length || !feedUrl) {
       setInitializing(false);
       return;
     }
 
     const filterFromUrl = searchParams?.get("filter");
     const firstFilter = filters[0];
+    const firstFilterId = getValueByPath<FilterItem, string>(
+      firstFilter,
+      dataKey
+    );
+
+    if (!firstFilterId) {
+      console.error(
+        `dataKey "${dataKey}" not found in first filter:`,
+        firstFilter
+      );
+      setInitializing(false);
+      return;
+    }
 
     if (filterFromUrl) {
       setActiveFilter(filterFromUrl);
-      const urlFilter = filters.find((f) => f.feedid === filterFromUrl);
-
-      if (urlFilter && urlFilter.feedid !== firstFilter.feedid) {
-        fetchFilteredEntries(urlFilter.feedid)
+      const urlFilter = filters.find(
+        (f) => getValueByPath(f, dataKey) === filterFromUrl
+      );
+      if (urlFilter && filterFromUrl !== firstFilterId) {
+        fetchFilteredEntries(feedUrl, filterFromUrl)
           .then((data) => setEntries(data))
           .catch((err) =>
             console.error("Failed to fetch initial filter data:", err)
@@ -110,28 +160,35 @@ export default function ShelfForWatch({
         return;
       }
     } else {
-      setActiveFilter(firstFilter.feedid);
+      setActiveFilter(firstFilterId);
       const newUrl = new URL(window.location.href);
-      newUrl.searchParams.set("filter", firstFilter.feedid);
+      newUrl.searchParams.set("filter", firstFilterId);
       router.push(newUrl.pathname + newUrl.search);
     }
 
     setInitializing(false);
-  }, [filters, searchParams, router]);
+  }, [filters, searchParams, router, dataKey, feedUrl]);
 
   const handleFilterClick = async (filter: FilterItem) => {
-    if (filterLoading || activeFilter === filter.feedid) return;
+    const filterId = getValueByPath<FilterItem, string>(filter, dataKey);
+
+    if (!filterId) {
+      console.error(` dataKey "${dataKey}" not found in filter:`, filter);
+      return;
+    }
+
+    if (filterLoading || activeFilter === filterId || !feedUrl) return;
 
     setFilterLoading(true);
-    setActiveFilter(filter.feedid);
+    setActiveFilter(filterId);
 
     // Update URL without scrolling
     const newUrl = new URL(window.location.href);
-    newUrl.searchParams.set("filter", filter.feedid);
+    newUrl.searchParams.set("filter", filterId);
     router.push(newUrl.pathname + newUrl.search, { scroll: false });
 
     try {
-      const newEntries = await fetchFilteredEntries(filter.feedid);
+      const newEntries = await fetchFilteredEntries(feedUrl, filterId);
       setEntries(newEntries);
     } catch (error) {
       console.error("Failed to fetch filtered entries:", error);
@@ -199,16 +256,13 @@ export default function ShelfForWatch({
             gap={1.5}
             renderItem={(filter) => (
               <Button
-                label={filter.label}
+                label={filter.title}
                 variant={
-                  watchData?.filters?.buttonType as
-                    | "contained"
-                    | "outlined"
-                    | "text"
+                  filterStyle?.buttonType as "contained" | "outlined" | "text"
                 }
                 size="medium"
                 onClick={() => handleFilterClick(filter)}
-                isActive={activeFilter === filter.feedid}
+                isActive={activeFilter === getValueByPath(filter, dataKey)}
               />
             )}
             getKey={(filter, index) => filter.id ?? index}
@@ -236,16 +290,18 @@ export default function ShelfForWatch({
             })}
           </Grid>
         ) : (
-          <div
-            style={{
-              textAlign: "center",
-              color: "#888",
-              padding: "60px",
-              fontSize: "16px",
-            }}
-          >
-            No content available for this filter.
-          </div>
+          !filterLoading && (
+            <div
+              style={{
+                textAlign: "center",
+                color: "#888",
+                padding: "60px",
+                fontSize: "16px",
+              }}
+            >
+              No content available for this filter.
+            </div>
+          )
         )}
 
         {/* Overlay Skeleton for filter changes */}
