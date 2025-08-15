@@ -666,18 +666,6 @@
   dependencies:
     tslib "^2.8.0"
 
-"@trilogydigital/tdp-life-ui@0.0.6":
-  version "0.0.6"
-  resolved "https://npm.pkg.github.com/download/@trilogydigital/tdp-life-ui/0.0.6/74a295137321fb4f110e8e422873b6104adcb133#74a295137321fb4f110e8e422873b6104adcb133"
-  integrity sha512-uzxxm3Zb/MzZjhx4TY3IM6AH3FN4LqFJxiQ56MWwG9ArM5PkM8NwN6dFf/wxsUHMAyFNRhpMo81O7H8t6OpQKA==
-  dependencies:
-    "@emotion/react" "^11.14.0"
-    "@emotion/styled" "^11.14.1"
-    "@mui/icons-material" "^7.2.0"
-    "@mui/material" "^7.2.0"
-    react "^19.1.0"
-    react-dom "^19.1.0"
-
 "@tybys/wasm-util@^0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@tybys/wasm-util/-/wasm-util-0.10.0.tgz#2fd3cd754b94b378734ce17058d0507c45c88369"
@@ -2561,7 +2549,7 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-react-dom@19.1.0, react-dom@^19.1.0:
+react-dom@19.1.0:
   version "19.1.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.1.0.tgz#133558deca37fa1d682708df8904b25186793623"
   integrity sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==
@@ -2588,7 +2576,7 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@19.1.0, react@^19.1.0:
+react@19.1.0:
   version "19.1.0"
   resolved "https://registry.yarnpkg.com/react/-/react-19.1.0.tgz#926864b6c48da7627f004795d6cce50e90793b75"
   integrity sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==

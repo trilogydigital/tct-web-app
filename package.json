@@ -15,7 +15,6 @@
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
     "@mui/material-nextjs": "^7.2.0",
-    "@trilogydigital/tdp-life-ui": "0.0.6",
     "next": "15.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
