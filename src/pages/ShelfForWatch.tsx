@@ -173,7 +173,7 @@ export default function ShelfForWatch({
     const filterId = getValueByPath<FilterItem, string>(filter, dataKey);
 
     if (!filterId) {
-      console.error(` dataKey "${dataKey}" not found in filter:`, filter);
+      console.error(`dataKey "${dataKey}" not found in filter:`, filter);
       return;
     }
 

@@ -167,7 +167,7 @@ export default function HeroSection(props: HeroSectionProps) {
               variant="contained"
               onClick={(e) => {
                 e.stopPropagation();
-                window.open(ctaLink, "_blank");
+                // window.open(ctaLink, "_blank");
               }}
               sx={{
                 borderRadius: styles.ctaButtonBorderRadius,

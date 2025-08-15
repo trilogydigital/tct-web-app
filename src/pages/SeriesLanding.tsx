@@ -142,6 +142,8 @@ export default function SeriesLanding({
     return () => clearTimeout(timer);
   }, []);
 
+  if (!stylesData || !stylesData.heroSection) return null;
+
   // Helper function to convert position string to valid position type
   const convertPosition = (position: string): HeroImagePosition => {
     const validPositions: HeroImagePosition[] = [
@@ -156,7 +158,6 @@ export default function SeriesLanding({
       ? (position as HeroImagePosition)
       : "top-left";
   };
-  if (!stylesData || !stylesData.heroSection) return null;
 
   // Convert styles to HeroSection props format
   const heroSectionProps: HeroSectionProps = {
