@@ -336,7 +336,7 @@ export default function Header({ data }: Props) {
           sx={{
             justifyContent: "space-between",
             background:
-              "linear-gradient(to bottom, #010a18 0%, #071020 50%, rgba(16, 26, 40, 0.4) 70%)",
+              "linear-gradient(to bottom, #030816 0%, #071020 50%, rgba(16, 26, 40, 0.4) 70%)",
             color: "#fff",
             minHeight: "64px !important",
             height: 64,

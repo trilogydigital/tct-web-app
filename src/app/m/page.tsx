@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import WatchContent from "./content";
 import Loader from "@/components/Loader/Loader";
+import MediaContent from "./content";
 
-export default function WatchPage() {
+export default function MediaPage() {
   return (
     <Suspense fallback={<Loader />}>
-      <WatchContent />
+      <MediaContent />
     </Suspense>
   );
 }

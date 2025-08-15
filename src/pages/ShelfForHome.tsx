@@ -37,7 +37,7 @@ export default function ShelfForHome({ sections }: ShelfForHomeProps) {
     const videoId = clickedCard.entry?.id || "default";
 
     // router.push(`/player`);
-    router.push(`/player?id=${encodeURIComponent(videoId)}`);
+    router.push(`/m?id=${encodeURIComponent(videoId)}`);
   };
 
   return (

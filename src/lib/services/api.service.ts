@@ -183,30 +183,82 @@ export async function getWatchData() {
   return res.json();
 }
 
-export async function getWatchFilterData(feedId: string) {
-  const res = await fetch(
-    `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`,
-    {
-      next: { revalidate: 60 },
-    }
-  );
+export async function getFiltersData(filtersUrl: string) {
+  const res = await fetch(filtersUrl, {
+    next: { revalidate: 60 },
+  });
   if (!res.ok)
-    throw new Error(`Failed to fetch filter data for feedId: ${feedId}`);
+    throw new Error(`Failed to fetch filters data from: ${filtersUrl}`);
+  return res.json();
+}
+
+// Updated function to use the grid's feedUrl template
+export async function getWatchFilterData(feedUrl: string, playlistId: string) {
+  const url = feedUrl.replace("{{playlistid}}", playlistId);
+  const res = await fetch(url, {
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) throw new Error(`Failed to fetch filter data from: ${url}`);
   return res.json();
 }
 
 // Client-side function for dynamic filter calls
-export async function fetchFilteredEntries(feedId: string) {
+export async function fetchFilteredEntries(
+  feedUrl: string,
+  playlistId: string
+) {
   try {
-    const res = await fetch(
-      `https://tbndsp-prod.trilogyapps.com/v1/virtualfeed?playlistid=${feedId}`
-    );
-    if (!res.ok)
-      throw new Error(`Failed to fetch entries for feedId: ${feedId}`);
+    const url = feedUrl.replace("{{playlistid}}", playlistId);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch entries from: ${url}`);
     const data = await res.json();
     return data.entry || [];
   } catch (error) {
     console.error("Error fetching filtered entries:", error);
     return [];
   }
+}
+export async function getMediaData(mediaId: string) {
+  const res = await fetch(
+    `https://tbndsp-prod.trilogyapps.com/v1/media?mediaid=${mediaId}`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch media data");
+  return res.json();
+}
+export async function getPlaylistData(seriesId: string) {
+  const res = await fetch(
+    `https://tbndsp-prod.trilogyapps.com/v1/playlist?playlistid=${seriesId}&page_limit=100&page_offset=1`,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch playlist data");
+  return res.json();
+}
+
+export async function getSeriesLandingStyles() {
+  const res = await fetch(
+    "https://strapi-dev.trilogyapps.com/api/shows-landing-page?populate=all",
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch series landing styles");
+  return res.json();
+}
+
+// Updated function to fetch both playlist data and styles
+export async function getSeriesLandingData(seriesId: string) {
+  const [playlistData, stylesData] = await Promise.all([
+    getPlaylistData(seriesId),
+    getSeriesLandingStyles(),
+  ]);
+
+  return {
+    playlistData,
+    stylesData: stylesData.data,
+  };
 }

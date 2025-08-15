@@ -157,12 +157,7 @@ export default function HeroSlider(props: HeroSliderProps) {
       )
     : {};
 
-  const handleSlideClick = (slideIndex: number, event: React.MouseEvent) => {
-    // Prevent click if clicking on CTA button
-    // if ((event.target as HTMLElement).closest("button")) {
-    //   return;
-    // }
-
+  const handleSlideClick = (slideIndex: number) => {
     if (onSlideClick) {
       onSlideClick(slideIndex);
     }
@@ -289,7 +284,7 @@ export default function HeroSlider(props: HeroSliderProps) {
                 position: "relative",
                 cursor: onSlideClick ? "pointer" : "default",
               }}
-              onClick={(e) => handleSlideClick(slideIndex, e)}
+              onClick={() => handleSlideClick(slideIndex)}
             >
               <Box
                 sx={{
@@ -344,8 +339,7 @@ export default function HeroSlider(props: HeroSliderProps) {
                     variant="contained"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleSlideClick(slideIndex, e);
-                      // window.open(slide.ctaLink, "_blank");
+                      handleSlideClick(slideIndex);
                     }}
                     sx={{
                       borderRadius: styles.ctaButtonBorderRadius || 1,

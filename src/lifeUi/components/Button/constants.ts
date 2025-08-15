@@ -4,7 +4,7 @@ export const BUTTON_DEFAULTS = {
   disabled: false,
   isActive: false,
   sx: {
-    borderRadius: { xs: "12px", sm: "9999px" },
+    borderRadius: { xs: "12px", sm: "20px" },
     textTransform: "uppercase",
     fontWeight: 700,
     px: { xs: 2, sm: 3 },
